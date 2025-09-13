@@ -1,10 +1,42 @@
-import axios from 'axios'
 
-const API_BASE = import.meta.env.VITE_API_BASE || 'http://127.0.0.1:8000/api'
+import axios from "axios";
 
-export const api = axios.create({ baseURL: API_BASE })
+const API = axios.create({
+  baseURL: "http://localhost:8000/api",
+});
 
-export const fetchProducts = () => api.get('/products/')
-export const createOrder = (payload) => api.post('/orders/', payload)
-export const markProductSold = (id) => api.post(`/products/${id}/mark_sold/`)
-export const completeOrder = (id) => api.post(`/orders/${id}/complete/`)
+export async function fetchProducts() {
+  const res = await fetch(`${API_BASE}/products/`);
+  return res.json();
+}
+
+export async function register(data) {
+  const res = await fetch(`${API_BASE}/auth/register/`, {
+    method: "POST",
+    headers: {"Content-Type":"application/json"},
+    body: JSON.stringify(data),
+  });
+  return res.json();
+}
+
+export async function login(credentials) {
+  const res = await fetch(`${API_BASE}/auth/login/`, {
+    method: "POST",
+    headers: {"Content-Type":"application/json"},
+    body: JSON.stringify(credentials),
+  });
+  return res.json(); 
+}
+
+export async function createOrder(order, token) {
+  const res = await fetch(`${API_BASE}/orders/`, {
+    method: "POST",
+    headers: {
+      "Content-Type":"application/json",
+      "Authorization": `Bearer ${token}`
+    },
+    body: JSON.stringify(order),
+  });
+  return res.json();
+}
+export default API;

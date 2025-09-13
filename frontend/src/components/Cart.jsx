@@ -1,33 +1,23 @@
-import React from 'react'
 
-export default function Cart({items, onRemove, onCheckout}){
-  const total = items.reduce((s,i)=> s + i.price * i.quantity, 0)
+import React from "react";
+import { useCart } from "../context/CartContext";
+import CartItem from "./CartItem"; 
+
+export default function Cart() {
+  const { cart } = useCart();
+
   return (
-    <div className="card" style={{marginTop:16}}>
-      <h3>Cart</h3>
-      {items.length===0 ? (
-        <p>No items in cart</p>
+    <div className="max-w-md mx-auto mt-10 p-6 bg-white shadow rounded-lg">
+      <h2 className="text-xl font-bold mb-4">Shopping Cart</h2>
+      {cart.length === 0 ? (
+        <p className="text-gray-500">Your cart is empty</p>
       ) : (
         <div>
-          {items.map((it, idx)=> (
-            <div key={idx} style={{display:'flex', justifyContent:'space-between', padding:'8px 0'}}>
-              <div>
-                <div style={{fontWeight:700}}>{it.name}</div>
-                <div style={{fontSize:13}}>x{it.quantity} • ${parseFloat(it.price).toFixed(2)}</div>
-              </div>
-              <div>
-                <button className="btn ghost" onClick={()=> onRemove(it)}>Remove</button>
-              </div>
-            </div>
+          {cart.map((item, index) => (
+            <CartItem key={index} item={item} />
           ))}
-
-          <hr />
-          <div style={{display:'flex', justifyContent:'space-between', alignItems:'center'}}>
-            <strong>Total: ${total.toFixed(2)}</strong>
-            <button className="btn primary" onClick={onCheckout}>Checkout</button>
-          </div>
         </div>
       )}
     </div>
-  )
+  );
 }

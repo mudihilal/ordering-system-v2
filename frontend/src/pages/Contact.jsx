@@ -1,9 +1,11 @@
-import React from 'react'
-export default function Contact(){
+function Contact() {
   return (
-    <div className="card">
-      <h2>Contact</h2>
-      <p>For demo: developer@example.com</p>
+    <div style={{ padding: "20px" }}>
+      <h1>Contact Us</h1>
+      <p>Email: mohdbinhilali03@gmail.com</p>
+      <p>Phone: +255 700 123 456</p>
     </div>
-  )
+  );
 }
+
+export default Contact;

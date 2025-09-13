@@ -1,9 +1,13 @@
-import React from 'react'
-export default function About(){
+import React from "react";
+
+export default function About() {
   return (
-    <div className="card">
-      <h2>About Product Ordering System</h2>
-      <p>This demo system shows a minimal product ordering flow with product statuses (available, pending, sold). Backend is Django REST; frontend React + Vite.</p>
+    <div style={{ textAlign: "center", marginTop: "20px" }}>
+      <h2>About Us</h2>
+      <p>
+        Welcome to our Product Ordering System. This system helps customers
+        order products online easily and securely.
+      </p>
     </div>
-  )
+  );
 }
