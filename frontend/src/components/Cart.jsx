@@ -1,23 +1,20 @@
-
 import React from "react";
 import { useCart } from "../context/CartContext";
-import CartItem from "./CartItem"; 
 
 export default function Cart() {
-  const { cart } = useCart();
+  const { cart, removeFromCart, clearCart } = useCart();
+
+  if (cart.length === 0) return <p>Your cart is empty.</p>;
 
   return (
-    <div className="max-w-md mx-auto mt-10 p-6 bg-white shadow rounded-lg">
-      <h2 className="text-xl font-bold mb-4">Shopping Cart</h2>
-      {cart.length === 0 ? (
-        <p className="text-gray-500">Your cart is empty</p>
-      ) : (
-        <div>
-          {cart.map((item, index) => (
-            <CartItem key={index} item={item} />
-          ))}
+    <div>
+      {cart.map((item, idx) => (
+        <div key={idx}>
+          {item.name} - ${item.price}
+          <button onClick={() => removeFromCart(item.id)}>Remove</button>
         </div>
-      )}
+      ))}
+      <button onClick={clearCart}>Clear Cart</button>
     </div>
   );
 }

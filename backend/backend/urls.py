@@ -1,24 +1,12 @@
-
 from django.contrib import admin
 from django.urls import path, include
-from django.conf import settings
-from django.conf.urls.static import static
-from django.http import JsonResponse
+from django.http import HttpResponseRedirect
 
-
-def home(request):
-    return JsonResponse({"message": "Welcome to Ecommerce API"})
-
+def redirect_to_frontend(request):
+    return HttpResponseRedirect("http://localhost:5173/")
 
 urlpatterns = [
-    path("", home),  
+    path("", redirect_to_frontend),  
     path("admin/", admin.site.urls),
     path("api/", include("shop.urls")),
 ]
-
-
-if settings.DEBUG:
-    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
-
-
-         

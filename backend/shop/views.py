@@ -1,46 +1,64 @@
-from rest_framework import viewsets, permissions
-from .models import Product, Order
-from .serializers import ProductSerializer, OrderSerializer, UserSerializer
-from rest_framework.decorators import action
+from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
-from django.contrib.auth.models import User
 from rest_framework import status
-from rest_framework.views import APIView
-from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework.permissions import IsAuthenticated
+from django.contrib.auth import get_user_model, authenticate
+from django.views.decorators.csrf import csrf_exempt
 
-class ProductViewSet(viewsets.ModelViewSet):
-    queryset = Product.objects.all().order_by("-created_at")
-    serializer_class = ProductSerializer
-    permission_classes = [permissions.AllowAny]  
+User = get_user_model()
 
-class OrderViewSet(viewsets.ModelViewSet):
-    serializer_class = OrderSerializer
-    permission_classes = [permissions.IsAuthenticated]
+@csrf_exempt
+@api_view(['POST'])
+def register(request):
+    data = request.data
+    email = data.get('email')
+    full_name = data.get('name') 
+    phone = data.get('phone')
+    address = data.get('address')
+    password = data.get('password')
 
-    def get_queryset(self):
-        user = self.request.user
-        if user.is_staff:
-            return Order.objects.all().order_by("-created_at")
-        return Order.objects.filter(user=user).order_by("-created_at")
+    if User.objects.filter(email=email).exists():
+        return Response({"error": "Email already exists"}, status=status.HTTP_400_BAD_REQUEST)
 
-    def perform_create(self, serializer):
-        serializer.save(user=self.request.user)
+    user = User.objects.create_user(
+        email=email,
+        password=password,
+        full_name=full_name,
+        is_staff=False
+    )
 
-class RegisterView(APIView):
-    permission_classes = [permissions.AllowAny]
-    def post(self, request):
-        username = request.data.get("username")
-        email = request.data.get("email")
-        password = request.data.get("password")
-        if not username or not password:
-            return Response({"error":"username and password required"}, status=status.HTTP_400_BAD_REQUEST)
-        if User.objects.filter(username=username).exists():
-            return Response({"error":"username exists"}, status=status.HTTP_400_BAD_REQUEST)
-        user = User.objects.create_user(username=username, email=email, password=password)
-        token = RefreshToken.for_user(user)
+    if hasattr(user, 'phone'):
+        user.phone = phone
+    if hasattr(user, 'address'):
+        user.address = address
+    user.save()
+
+    return Response({"message": "User registered successfully"}, status=status.HTTP_201_CREATED)
+
+@csrf_exempt
+@api_view(['POST'])
+def login_view(request):
+    email = request.data.get("email")
+    password = request.data.get("password")
+
+    user = authenticate(username=email, password=password)
+    if user is not None:
         return Response({
-            "user": UserSerializer(user).data,
-            "access": str(token.access_token),
-            "refresh": str(token)
+            "token": "fake-jwt-token",
+            "user": {
+                "name": getattr(user, "full_name", ""),
+                "email": user.email,
+            }
         })
+    return Response({"error": "Invalid credentials"}, status=status.HTTP_401_UNAUTHORIZED)
 
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def profile(request):
+    user = request.user
+    return Response({
+        "name": getattr(user, "full_name", ""),
+        "email": user.email,
+        "address": getattr(user, "address", ""),
+        "phone": getattr(user, "phone", "")
+    })
