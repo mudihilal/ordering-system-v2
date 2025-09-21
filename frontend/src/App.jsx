@@ -6,10 +6,10 @@ import Cart from "./components/Cart";
 import Home from "./pages/Home";
 import About from "./pages/About";
 import Contact from "./pages/Contact";
-import ProfileUser from "./pages/ProfileUser";
+import Profile from "./pages/Profile";
+import Login from "./pages/Login";
 import ProfileAdmin from "./pages/ProfileAdmin";
 import Register from "./pages/Register";
-import Login from "./pages/Login";
 
 import { CartProvider } from "./context/CartContext";
 import { AuthProvider } from "./context/AuthContext";
@@ -27,8 +27,8 @@ export default function App() {
             <Route path="/contact" element={<Contact />} />
             <Route path="/cart" element={<Cart />} />
             <Route path="/register" element={<Register />} />
+            <Route path="/profile" element={<Profile />} />
             <Route path="/login" element={<Login />} />
-            <Route path="/profile-user" element={<ProfileUser />} />
             <Route path="/profile-admin" element={<ProfileAdmin />} />
             <Route path="*" element={<h2>404 - Page Not Found</h2>} />
           </Routes>

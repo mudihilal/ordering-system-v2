@@ -1,58 +1,94 @@
+/* Register.css */
 .register-container {
   display: flex;
   justify-content: center;
   align-items: center;
   min-height: 100vh;
-  background: linear-gradient(135deg, #6dd5ed, #2193b0);
+  background: linear-gradient(135deg, #f8fafc, #e2e8f0);
+  font-family: "Poppins", sans-serif;
+}
+
+.register-box {
+  background: #fff;
+  padding: 2.5rem;
+  border-radius: 16px;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+  width: 100%;
+  max-width: 450px;
+  animation: fadeIn 0.8s ease-in-out;
+}
+
+.register-box h2 {
+  text-align: center;
+  margin-bottom: 2rem;
+  color: #1e293b;
+  font-size: 1.8rem;
+  font-weight: 600;
 }
 
 .register-form {
-  background: white;
-  padding: 2rem;
-  border-radius: 12px;
-  box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.15);
-  width: 100%;
-  max-width: 400px;
   display: flex;
-  flex-direction: column;
+  flex-direction: column; /* mfumo wa row */
   gap: 1rem;
 }
 
-.register-form h2 {
-  text-align: center;
-  color: #2193b0;
-  margin-bottom: 1rem;
-}
-
 .register-form input {
-  padding: 0.8rem;
-  border: 1px solid #ccc;
-  border-radius: 8px;
+  padding: 1rem;
+  border: 1px solid #cbd5e1;
+  border-radius: 10px;
   font-size: 1rem;
+  outline: none;
+  transition: all 0.3s ease;
 }
 
 .register-form input:focus {
-  border-color: #2193b0;
-  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 6px rgba(59, 130, 246, 0.25);
 }
 
-.register-form button {
-  padding: 0.8rem;
-  background: #2193b0;
-  color: white;
+.register-btn {
+  background: #3b82f6;
+  color: #fff;
+  padding: 1rem;
   border: none;
-  border-radius: 8px;
+  border-radius: 10px;
   font-size: 1rem;
+  font-weight: 600;
   cursor: pointer;
-  transition: background 0.3s;
+  transition: background 0.3s ease;
 }
 
-.register-form button:hover {
-  background: #176682;
+.register-btn:hover {
+  background: #2563eb;
 }
 
-.register-error {
-  color: red;
-  font-size: 0.9rem;
+.register-footer {
   text-align: center;
+  margin-top: 1.5rem;
+  font-size: 0.95rem;
+  color: #64748b;
+}
+
+.register-footer a {
+  color: #3b82f6;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.register-footer a:hover {
+  text-decoration: underline;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(15px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+body {
+  background: greenyellow !important;
 }

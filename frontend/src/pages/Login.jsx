@@ -1,60 +1,60 @@
-import React, { useState } from "react";
-import { useAuth } from "../context/AuthContext";
-import { useNavigate } from "react-router-dom";
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 export default function Login() {
-  const { login } = useAuth();
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const navigate = useNavigate();
 
-  function getCSRFToken() {
-    const match = document.cookie.match(new RegExp('(^| )csrftoken=([^;]+)'));
-    if (match) return match[2];
-    return "";
-  }
-
-  const handleSubmit = async (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
-    setError("");
-
     try {
-      const response = await fetch("http://127.0.0.1:8000/api/login/", {
-        method: "POST",
+      const response = await fetch('http://127.0.0.1:8000/api/token/', {
+        method: 'POST',
         headers: {
-          "Content-Type": "application/json",
-          "X-CSRFToken": getCSRFToken(),
+          'Content-Type': 'application/json',
         },
-        credentials: "include",
         body: JSON.stringify({ email, password }),
       });
 
       const data = await response.json();
 
-      if (!response.ok) {
-        throw new Error(data.error || "Login failed");
+      if (response.ok) {
+        localStorage.setItem('access_token', data.access);
+        localStorage.setItem('refresh_token', data.refresh);
+        alert('Login successful!');
+        navigate('/profile');
+      } else {
+        alert(data.detail || 'Login failed. Check your email or password.');
       }
-
-      login({
-        ...data.user,
-        token: data.token,
-        role: "user",
-      });
-
-      navigate("/profile-user");
-    } catch (err) {
-      setError(err.message);
+    } catch (error) {
+      console.error('Error:', error);
+      alert('An error occurred during login.');
     }
   };
 
   return (
     <div className="login-container">
-      <form className="login-form" onSubmit={handleSubmit}>
-        <h2>Login</h2>
-        {error && <p className="login-error">{error}</p>}
-        <input type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} required />
-        <input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} required />
+      <h2>Login</h2>
+      <form onSubmit={handleLogin}>
+        <div>
+          <label>Email:</label>
+          <input
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+          />
+        </div>
+        <div>
+          <label>Password:</label>
+          <input
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+          />
+        </div>
         <button type="submit">Login</button>
       </form>
     </div>
