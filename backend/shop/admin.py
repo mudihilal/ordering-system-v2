@@ -1,18 +1,18 @@
 from django.contrib import admin
-from .models import User, Order, OrderItem
+from .models import Product, Order, User
 
-@admin.register(User)
-class UserAdmin(admin.ModelAdmin):
-    list_display = ['email', 'full_name', 'is_staff', 'is_superuser']
-    search_fields = ['email', 'full_name']
+@admin.register(Product)
+class ProductAdmin(admin.ModelAdmin):
+    list_display = ('name', 'price', 'id')  
+    search_fields = ('name',)
 
 @admin.register(Order)
 class OrderAdmin(admin.ModelAdmin):
-    list_display = ['user', 'completed', 'created_at']  
-    list_filter = ['completed', 'created_at']           
-    search_fields = ['user__email']
+    list_display = ('id', 'user', 'total', 'created_at', 'completed', 'payment')
+    list_filter = ('completed', 'payment')
+    search_fields = ('user__email',)
 
-@admin.register(OrderItem)
-class OrderItemAdmin(admin.ModelAdmin):
-    list_display = ['order', 'product', 'quantity']
-    search_fields = ['order__user__email', 'product__name']
+@admin.register(User)
+class UserAdmin(admin.ModelAdmin):
+    list_display = ('full_name', 'email', 'phone')
+    search_fields = ('email',)
